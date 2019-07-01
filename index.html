@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>React Tutorial</title>
+    <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+    <script src="https://unpkg.com/prop-types@15.6/prop-types.js"></script>
+    <style>
+        .red {
+            color: #ff0000;
+        }
+
+        .none {
+            display: none;
+        }
+
+        body {
+            padding: 0;
+            margin: 0;
+            background-color: #ccc;
+            display: flex;
+        }
+
+        #root {
+            margin: 0 auto;
+        }
+
+        p {
+            margin: 0 0 5px;
+        }
+
+        .article {
+            background-color: burlywood;
+            border: solid 1px rgba(0, 89, 181, 0.8);
+            width: 600px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 5px -1px rgb(0, 81, 202);
+            padding: 3px 5px;
+            margin: 10px 0;
+        }
+
+        .news_author {
+            text-decoration: underline;
+            color: #007DDC;
+        }
+
+        .news_text {
+            display: block;
+            margin: 10px 0 0;
+        }
+        .news_big-text{
+            animation: opasityUp 600ms;
+        }
+        @keyframes opasityUp {
+            0%{
+                opacity: 0;
+            }
+            100%{
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        const myNews = [
+           {
+               id: 1,
+               author:'Саша Печкин',
+               text: 'В четверг, четветого числа...',
+               bigText:'в четыре с четвертью часа четыре чёрненьких чумазеньких чертёнка чертили чёрными чернилами чертёж.'
+           },
+           {
+               id: 2,
+                author: 'Просто Вася',
+                text: 'Считаю, что $ должен стоить 35 рублей!',
+                bigText: 'a евро 42 рубля'
+           },
+           {
+               id: 3,
+                author: 'Max Frontend',
+                text: 'Прошло 2 года с прошлых учебников, а $ так и не стоит 35',
+                bigText: 'А евро опять выше 70.'
+           },
+           {
+               id: 4,
+                author: 'Гость',
+                text: 'Бесплатно. Без смс, про реакт, заходи - https://maxpfrontend.ru',
+                bigText: 'Еще есть группа VK, telegram и канал на youtube! Вся инфа на сайте, не реклама!'
+           },
+           {
+               id: 5,
+                author: 'Гость-2',
+                text: 'Платно. Без смс, про реакт, заходи - https://maxpfrontend.ru',
+                bigText: 'Затем, научимся отображать полный текст новости сразу после вводного текста'
+           }
+       ];
+
+
+
+        class News extends React.Component {
+            renderNews = () => {
+                const { data } = this.props
+                let newsTemplate = null;
+
+                if(data.length){
+                    newsTemplate = data.map(function (item, index) {
+                        return <Article key={item.id} data={item} />
+                    })
+                }else{
+                    newsTemplate = <p>К сожалению новостей нет</p>
+                }
+                return newsTemplate
+            }
+
+            render(){
+                const { data } = this.props
+
+                return (
+                    <div className="news">
+                        {this.renderNews()}
+                        <b className={data.length > 0 ? '' : 'none'}>Всего новостей: {data.length}</b>
+                    </div>
+                )
+            }    
+        }
+
+        News.propTypes = {
+            data: PropTypes.array.isRequired
+        }
+
+        class Article extends React.Component {
+            state = {
+                visible: false,
+            }
+
+            hendleReadMoreClick = e =>{
+                e.preventDefault()
+                this.setState({ visible: true }, ()=>{
+                    alert('Состояние изменилось')
+                })
+            }
+            render(){
+                const { author, text, bigText } = this.props.data
+                const { visible } = this.state
+                return(
+                    <div className = 'article'>
+                        <p className='news_author'>{author}:</p>
+                        <p className='news_text'>{text}</p>
+                        {
+                            !visible && <a href="#" onClick={this.hendleReadMoreClick} className='news_readmore'>Подробнее</a>
+                        }
+                        {
+                            visible && <p className='news_big-text'>{bigText}</p>
+                        }
+                    </div>
+                )
+            }
+        }
+        Article.propTypes = {
+            data: PropTypes.shape({
+                author: PropTypes.string.isRequired,
+                text: PropTypes.string.isRequired,
+                bigText: PropTypes.string.isRequired
+            })
+        }
+
+        const App = () => {
+            return (
+                <div>
+                    <h3>Новости</h3>
+                    <News data={myNews}/> {/*добавили свойство data*/}
+                </div>
+                
+            )
+        }
+        
+        ReactDOM.render(
+            <App />,
+            document.getElementById('root')
+        )
+    </script>
+</body>
+
+</html>
