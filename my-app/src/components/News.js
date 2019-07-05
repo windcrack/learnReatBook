@@ -4,12 +4,26 @@ import PropTypes from 'prop-types'
 import { Article } from './Article'
 
 class News extends React.Component {
+
+    state = {
+        filteredNews: this.props.data,
+    }
+
+    getDerivedStateFromProps(props, state){
+        let nextFilteredNews = [...props.data]
+        nextFilteredNews.forEach((item, index) =>{
+            if(item.bigText.toLowerCase().indexOf('pubg') !== -1){
+                item.bigText = 'SPAM'
+            }
+        })
+        return { filteredNews: nextFilteredNews, }
+    }
     renderNews = () => {
-        const { data } = this.props
+        const { filteredNews } = this.state
         let newsTemplate = null;
  
-        if(data.length){
-            newsTemplate = data.map(function (item, index) {
+        if(filteredNews.length){
+            newsTemplate = filteredNews.map(function (item, index) {
                 return <Article key={item.id} data={item} />
             })
         }else{
@@ -19,12 +33,12 @@ class News extends React.Component {
     }
  
     render(){
-        const { data } = this.props
+        const { filteredNews } = this.state
  
         return (
             <div className="news">
                 {this.renderNews()}
-                <b className={data.length > 0 ? '' : 'none'}>Всего новостей: {data.length}</b>
+                <b className={filteredNews.length > 0 ? '' : 'none'}>Всего новостей: {filteredNews.length}</b>
             </div>
         )
     }    

@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 
 import { Add } from './components/Add'
 import { News } from './components/News'
-import newsData from './data/newsData'
 import './App.css';
 
 

@@ -73,7 +73,7 @@ class Add extends React.Component {
                 className="add__bnt"
                 disabled={!this.vadiate()}
                 onClick={this.onBntClickHandler}>
-                Показать alert
+                Добавить новость!
             </button>
            </form>
        )
